@@ -24,18 +24,26 @@ async function getTax(income) {
       throw new Error(`Response status: ${response.status}`);
     }
     const taxResult = await response.json();
-    console.log(taxResult);
+    // console.log(taxResult);
     return taxResult;
-
   } catch (error) {
-    throw new Error(`API Failed to get tax - ${error.message}`)
+    throw new Error(`API Failed to get tax - ${error.message}`);
   }
 }
 
-function getHEM(income, dependents) {
-  // REPLACE THIS
-  // Write your HEM API call code here.
-  return 2000 + dependents * 400;
+async function getHEM(income, dependents) {
+  const url = `http://localhost:3000/api/hem?income=${income}&dependents=${dependents}`;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    }
+    const hemResult = await response.json();
+    // console.log(hemResult);
+    return hemResult;
+  } catch (error) {
+    throw new Error(`API Failed to get HEM - ${error.message}`);
+  }
 }
 
 /**

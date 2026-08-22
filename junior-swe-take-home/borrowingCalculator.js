@@ -20,13 +20,17 @@ function createBorrowCalculator() {
     const url = `http://localhost:3000/api/tax?income=${income}`;
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          Authorization: "Bearer pat_abcdefghijklmnopqrstuvwxyz0123456789",
+        },
+      });
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
       const taxResult = await response.json();
-      // console.log(taxResult);
-      return taxResult;
+      
+      return taxResult.tax;
     } catch (error) {
       throw new Error(`API Failed to get tax - ${error.message}`);
     }
@@ -35,13 +39,17 @@ function createBorrowCalculator() {
   async function getHEM(income, dependents) {
     const url = `http://localhost:3000/api/hem?income=${income}&dependents=${dependents}`;
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: {
+          Authorization: "Bearer pat_abcdefghijklmnopqrstuvwxyz0123456789",
+        },
+      });
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
       const hemResult = await response.json();
-      // console.log(hemResult);
-      return hemResult;
+    
+      return hemResult.hem;
     } catch (error) {
       throw new Error(`API Failed to get HEM - ${error.message}`);
     }

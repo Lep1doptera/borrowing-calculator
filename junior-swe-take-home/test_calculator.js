@@ -27,15 +27,35 @@ describe("Term Deposit Calculator Tests", () => {
 
   it("should return 0 for invalid negative inputs", async () => {
     const calculator = createBorrowCalculator();
+    
     const result = await calculator.calculateBorrowingPower(
-      30000,
-      3,
-      4000,
-      5000,
-      7.5,
+      -30000,
+      -3,
+      -4000,
+      -5000,
+      -7.5,
     );
     assert.strictEqual(result.maxLoanAmount, 0);
     assert.strictEqual(result.monthlyRepayment, 0);
+  });
+
+  it("should accept number values for calculator input", async () => {
+    const calculator = createBorrowCalculator();
+
+    const result = await calculator.calculateBorrowingPower(
+      150000.5,
+      1,
+      1500.8,
+      1000,
+      7.5,
+    );
+    assert.strictEqual(typeof 150000.5, "number");
+    assert.strictEqual(typeof 1, "number");
+    assert.strictEqual(typeof 1500.8, "number");
+    assert.strictEqual(typeof 1000, "number");
+    assert.strictEqual(typeof 7.5, "number");
+
+    assert.ok(result.maxLoanAmount > 0);
   });
 
   it("should reduce borrowing power when there is a credit card limit", async () => {

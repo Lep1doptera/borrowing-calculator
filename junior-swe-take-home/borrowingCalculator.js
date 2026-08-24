@@ -65,6 +65,17 @@ function createBorrowCalculator() {
     creditLimits,
     annualAssessmentRate,
   ) {
+    // if any input is a negative number, loan should be 0
+    if (
+      income < 0 ||
+      dependents < 0 ||
+      expenses < 0 ||
+      creditLimits < 0 ||
+      annualAssessmentRate < 0
+    ) {
+      return { maxLoanAmount: 0, monthlyRepayment: 0 };
+    }
+
     // 1. Calculate Net Monthly Income after tax deductions
     const annualTax = await getTax(income);
     const netMonthlyIncome = (income - annualTax) / 12;
@@ -144,7 +155,7 @@ function createBorrowCalculator() {
     getTax,
     getHEM,
     calculateBorrowingPower,
-    runConsoleMode
+    runConsoleMode,
   };
 }
 

@@ -29,7 +29,7 @@ function createBorrowCalculator() {
         throw new Error(`Response status: ${response.status}`);
       }
       const taxResult = await response.json();
-      
+
       return taxResult.tax;
     } catch (error) {
       throw new Error(`API Failed to get tax - ${error.message}`);
@@ -48,7 +48,7 @@ function createBorrowCalculator() {
         throw new Error(`Response status: ${response.status}`);
       }
       const hemResult = await response.json();
-    
+
       return hemResult.hem;
     } catch (error) {
       throw new Error(`API Failed to get HEM - ${error.message}`);
@@ -65,6 +65,17 @@ function createBorrowCalculator() {
     creditLimits,
     annualAssessmentRate,
   ) {
+    // if any input is a negative number, loan should be 0
+    if (
+      income < 0 ||
+      dependents < 0 ||
+      expenses < 0 ||
+      creditLimits < 0 ||
+      annualAssessmentRate < 0
+    ) {
+      return { maxLoanAmount: 0, monthlyRepayment: 0 };
+    }
+
     // 1. Calculate Net Monthly Income after tax deductions
     const annualTax = await getTax(income);
     const netMonthlyIncome = (income - annualTax) / 12;
@@ -140,17 +151,18 @@ function createBorrowCalculator() {
     });
   }
 
-  if (require.main === module) {
-    runConsoleMode();
-  }
-
   return {
     getTax,
     getHEM,
     calculateBorrowingPower,
+    runConsoleMode,
   };
 }
 
-createBorrowCalculator();
+const calculator = createBorrowCalculator();
+
+if (require.main === module) {
+  calculator.runConsoleMode();
+}
 
 module.exports = { createBorrowCalculator };

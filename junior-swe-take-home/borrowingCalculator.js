@@ -29,7 +29,7 @@ function createBorrowCalculator() {
         throw new Error(`Response status: ${response.status}`);
       }
       const taxResult = await response.json();
-      
+
       return taxResult.tax;
     } catch (error) {
       throw new Error(`API Failed to get tax - ${error.message}`);
@@ -48,7 +48,7 @@ function createBorrowCalculator() {
         throw new Error(`Response status: ${response.status}`);
       }
       const hemResult = await response.json();
-    
+
       return hemResult.hem;
     } catch (error) {
       throw new Error(`API Failed to get HEM - ${error.message}`);
@@ -140,17 +140,18 @@ function createBorrowCalculator() {
     });
   }
 
-  if (require.main === module) {
-    runConsoleMode();
-  }
-
   return {
     getTax,
     getHEM,
     calculateBorrowingPower,
+    runConsoleMode
   };
 }
 
-createBorrowCalculator();
+const calculator = createBorrowCalculator();
+
+if (require.main === module) {
+  calculator.runConsoleMode();
+}
 
 module.exports = { createBorrowCalculator };

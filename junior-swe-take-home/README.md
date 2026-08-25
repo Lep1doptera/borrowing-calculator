@@ -1,47 +1,41 @@
 # Borrowing Power Calculator
 
-Hello and thanks so much for taking the time to do the Ferocia Junior Engineering Code Exercise.
+## Overview
 
-This borrowing power calculator written in Javascript was started by one of our juniors, Gen (her full name is “Gen A. Eye”), but she she went on leave before she could finish it…
+This project includes a JavaScript borrowing power calculator that takes a user's financial details and calculates their estimated borrowing power and monthly repayment created from Gen A. Eye 👀 at Ferocia.
 
-We need you to progress the code in her absence. Once you’ve submitted your work and we’ve reviewed it, you’ll sit down and explain the code to Gens team members (our interviewers) in a pairing session.
+The calculator utilizes a local API to get the tax and HEM (Household Expenditure Measure) values instead of calculating these itself.
 
-Keep in mind that we’ll expect you to be able to explain and expand on the code you submit.
+The user input should be:
 
-If you haven’t done much Javascript before don’t worry. We’ll take your experience into account, just give it your best shot. 
+- Gross annual income
+- Number of dependents
+- Monthly expenses
+- Total credit card limits
 
-You can see our online borrowing power calculator (Gens project is simplified so dont expect the number to match perfectly) to see how it work (https://www.bendigobank.com.au/personal/loans/calculators/borrowing-power/).
+The calculator then uses these values to work out the user's borrowing power over a 30-year loan term with 7% interest.
 
-## Please try to complete the following:
+## Coding Decisions
 
-### Replace the two placeholder functions
-The code needs to calculate tax on income and a HEM (Household Expense Measure) value.
-Currently this is performed by placeholder code in the following functions:
-    getTax(income)
-    getHEM(income, dependents)
-You will need to replace the code in both with API calls.
-We have provided a server.js which can you run locally to expose the following 2 development endpoints:
-    http://localhost:3000/api/tax?income=[income]
-    http://localhost:3000/api/hem?income=[income]&dependents=[dependents]
-Both return JSON and require an authentication header with a valid PAT (Personal Access Token), see server.md for full documentation including the development PAT.
+- **Factory / closure:** Used `createBorrowCalculator()` to keep the calculator functions and constants together to encapsulate and keep private.
+- **API functions:** Reimplemented `getTax()` and `getHEM()` to use `fetch()` with the required Bearer token, response checking inside try/catch. Both return only the value needed by the calculator (`taxResult.tax` and `hemResult.hem`).
+- **Async handling:** Made `calculateBorrowingPower()` asynchronous and used `await` for the API calls.
+- **Input validation:** Added validation for negative inputs and return `0` borrowing power when invalid values are provided.
 
-### Make it manageable
-Gen planned to pull all the calculator functions into a class so she could extend it later, but we’ll leave it up to you to choose the approach (a well-formed class, an orchestrator function, a factory/closure pattern, or whatever)
+## Tests Added / Updated
 
-### Test coverage
-Of course we’ll need the test suite to pass and have full coverage.
+- Standard borrowing power - changed expected monthly repayment amount based on calculators response.
+- Negative inputs return `0`- required input validation above.
+- Calculator Inputs should be a type of number.
+- Higher credit card limits reduce borrowing power.
+- Higher expenses reduce borrowing power.
 
-
-
-## Rules:
-
-Use whatever tools and resources help you get the job done. That includes AI, documentation, Stack Overflow, or anything else. What matters is that you understand every line you submit. In the follow-up pairing session, we'll ask you to walk us through your code, explain your decisions, and make changes on the fly - without an AI in Agent mode. If you can't do that confidently, it will count against you. The goal isn't to catch you out, it's to understand how you think.
-
-## Setup
+## Setup and Dependencies
 
 Make sure you have Node.js installed.
 
 Install dependencies:
+
 ```
 npm install
 ```
@@ -51,26 +45,27 @@ npm install
 You wil need to run the development API in it's own terminal window.
 (The server will be available at http://localhost:3000/).
 To start the server run the following command:
+
 ```
 npm run api
 ```
+
 Note: You can stop the server with Ctrl+C
 
-
-## Running
+## Running the files
 
 Run the calculator with:
+
 ```
 npm start
 ```
 
-
 ## Testing
 
 Run tests with:
+
 ```
 npm test
 ```
 
-
-
+All green ticks will be passed, otherwise when X marks the spot it's failed.

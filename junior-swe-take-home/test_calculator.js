@@ -27,7 +27,7 @@ describe("Term Deposit Calculator Tests", () => {
 
   it("should return 0 for invalid negative inputs", async () => {
     const calculator = createBorrowCalculator();
-    
+
     const result = await calculator.calculateBorrowingPower(
       -30000,
       -3,
@@ -37,25 +37,6 @@ describe("Term Deposit Calculator Tests", () => {
     );
     assert.strictEqual(result.maxLoanAmount, 0);
     assert.strictEqual(result.monthlyRepayment, 0);
-  });
-
-  it("should accept number values for calculator input", async () => {
-    const calculator = createBorrowCalculator();
-
-    const result = await calculator.calculateBorrowingPower(
-      150000.5,
-      1,
-      1500.8,
-      1000,
-      7.5,
-    );
-    assert.strictEqual(typeof 150000.5, "number");
-    assert.strictEqual(typeof 1, "number");
-    assert.strictEqual(typeof 1500.8, "number");
-    assert.strictEqual(typeof 1000, "number");
-    assert.strictEqual(typeof 7.5, "number");
-
-    assert.ok(result.maxLoanAmount > 0);
   });
 
   it("should reduce borrowing power when there is a credit card limit", async () => {
@@ -106,5 +87,75 @@ describe("Term Deposit Calculator Tests", () => {
       higherExpenses.maxLoanAmount < lowerExpenses.maxLoanAmount,
       "borrowing power should be lower when expenses are higher",
     );
+  });
+
+  describe("Type Validation Tests", () => {
+    it("should reject non-number values for income input", async () => {
+      const calculator = createBorrowCalculator();
+
+      const result = await calculator.calculateBorrowingPower(
+        "a",
+        1,
+        1500.8,
+        1000,
+        7.5,
+      );
+
+      assert.equal(
+        result.error,
+        "Could not process: inputs must be a number. Try again.",
+      );
+    });
+
+    it("should reject non-number values for dependents input", async () => {
+      const calculator = createBorrowCalculator();
+
+      const result = await calculator.calculateBorrowingPower(
+        150000,
+        "s",
+        1500.8,
+        1000,
+        7.5,
+      );
+
+      assert.equal(
+        result.error,
+        "Could not process: inputs must be a number. Try again.",
+      );
+    });
+
+    it("should reject non-number values for expenses input", async () => {
+      const calculator = createBorrowCalculator();
+
+      const result = await calculator.calculateBorrowingPower(
+        150000,
+        1,
+        "d",
+        1000,
+        7.5,
+      );
+
+      assert.equal(
+        result.error,
+        "Could not process: inputs must be a number. Try again.",
+      );
+    });
+
+    it("should reject non-number values for creditLimits input", async () => {
+      const calculator = createBorrowCalculator();
+
+      const result = await calculator.calculateBorrowingPower(
+        150000,
+        1,
+        1500.8,
+        "f",
+        7.5,
+      );
+
+      assert.equal(
+        result.error,
+        "Could not process: inputs must be a number. Try again.",
+      );
+    });
   });
 });

@@ -65,6 +65,18 @@ function createBorrowCalculator() {
     creditLimits,
     annualAssessmentRate,
   ) {
+    // Check that all inputs are valid numbers
+    if (
+      !Number.isFinite(income) ||
+      !Number.isFinite(dependents) ||
+      !Number.isFinite(expenses) ||
+      !Number.isFinite(creditLimits) ||
+      !Number.isFinite(annualAssessmentRate)
+    ) {
+      return {
+        error: "Could not process: inputs must be a number. Try again.",
+      };
+    }
     // if any input is a negative number, loan should be 0
     if (
       income < 0 ||
@@ -136,13 +148,18 @@ function createBorrowCalculator() {
               assessmentRate,
             );
 
-            console.log("\n--- Calculation Summary ---");
-            console.log(
-              `Maximum Borrowing Power at ${INTEREST_RATE}%: $${result.maxLoanAmount.toLocaleString()}`,
-            );
-            console.log(
-              `Assumed Monthly Mortgage Repayment: $${result.monthlyRepayment.toLocaleString()} over 30 years`,
-            );
+            if (result.error) {
+              // if input is invalid
+              console.log(`\n${result.error}`);
+            } else {
+              console.log("\n--- Calculation Summary ---");
+              console.log(
+                `Maximum Borrowing Power at ${INTEREST_RATE}%: $${result.maxLoanAmount.toLocaleString()}`,
+              );
+              console.log(
+                `Assumed Monthly Mortgage Repayment: $${result.monthlyRepayment.toLocaleString()} over 30 years`,
+              );
+            }
 
             rl.close();
           });

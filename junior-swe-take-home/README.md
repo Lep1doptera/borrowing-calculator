@@ -20,15 +20,15 @@ The calculator then uses these values to work out the user's borrowing power ove
 - **Factory / closure:** Used `createBorrowCalculator()` to keep the calculator functions and constants together to encapsulate and keep private.
 - **API functions:** Reimplemented `getTax()` and `getHEM()` to use `fetch()` with the required Bearer token, response checking inside try/catch. Both return only the value needed by the calculator (`taxResult.tax` and `hemResult.hem`).
 - **Async handling:** Made `calculateBorrowingPower()` asynchronous and used `await` for the API calls.
-- **Input validation:** Added validation for negative inputs and return `0` borrowing power when invalid values are provided.
+- **Input validation:** Added validation for negative inputs and return `0` borrowing power when negative values are provided. When inputs are not a number, a message will return that it could not be processed as it was invalid. 
 
 ## Tests Added / Updated
 
 - Standard borrowing power - changed expected monthly repayment amount based on calculators response.
 - Negative inputs return `0`- required input validation above.
-- Calculator Inputs should be a type of number.
 - Higher credit card limits reduce borrowing power.
 - Higher expenses reduce borrowing power.
+- Calculator Inputs should be a type of number.
 
 ## Setup and Dependencies
 
